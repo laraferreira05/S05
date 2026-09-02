@@ -1,0 +1,22 @@
+Body{
+  margin: 0;
+  font-family: sans-serif;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backgroud-color: red;
+  padding: 15px 30 px;
+}
+
+#menu{
+  backgroud-color: green;
+  padding: 10px;
+}
+
+#perfil{
+  backgroud-color: blue;
+  padding: 10px;
+}
