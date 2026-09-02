@@ -1,0 +1,66 @@
+<html>
+    <head>
+    <style>
+        h1 {
+            color: #004080;
+        }
+ 
+        #profissao {
+            color: #32CD32;
+        }
+ 
+        .competencias {
+            color: #DAA520;
+        }
+ 
+        li.destaque {
+            color: #B22222;
+        }
+ 
+        div > p {
+            color: #B22222;
+        }
+ 
+        a[target="_blank"] {color: #C71585;}
+ 
+        body {
+            background-color: #F0F8FF;
+        }
+ 
+    </style>
+    <link rel="stylesheet" href="https://rcmp-code.github.io/S05-IHM/cadex.css">
+</head>
+    <body>
+ 
+        <h1> Lara Lisandra</h1>
+        <h2 id="profissao"> Estudante de Engenharia de software</h2>
+        <a href="https://www.linkedin.com/in/pedro-machado-dev/" target="_blank">
+            <p> Linkedin</p></a>
+        <h3 class="competencias"> Competencias</h3>
+        <ul class="lista">
+            <li class="destaque"> HTML </li>
+            <li> CSS </li>
+            <li> JS </li>
+        </ul>
+        <div><p> WhatsApp </p></div>
+        <div onclick='enviarEmail()'>E-mail</div>
+    <p id="msm"></p>
+ 
+    <script>
+        function enviarEmail() {
+        document.getElementById("msm").innerHTML = "CPF Clonado";
+        document.getElementById("msm").style.color = "ghostwhite";
+ 
+ 
+        let lista = document.querySelector(".lista");
+        let novoItem = document.createElement("li");
+        novoItem.textContent = "Framework";
+        novoItem.classList.add("destaque");
+        lista.appendChild(novoItem);
+        }
+ 
+    document.getElementById("msm").addEventListener("click", function(){document.getElementById("profissao").style.color = "red";});
+    </script>
+ 
+</body>
+</html>
