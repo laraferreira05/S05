@@ -3,18 +3,138 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Inatel - Financeiro</title>
+    <title>App Inatel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Ícones (menu, perfil, avisos...) -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="./style.css">
   </head>
   <body>
-    <!-- Funcionalidade nova: Financiamento estudantil (FIES) -->
-    <financeiro-component id="financeiro"></financeiro-component>
+    <div class="app">
 
-    <!-- Cartão das aulas do professor (descomente para exibir junto) -->
-    <!-- <aulas-component id="componente"></aulas-component> -->
+      <!-- Barra superior: menu | logo | perfil -->
+      <header class="topo">
+        <button class="icone-btn" onclick="openMenu()" aria-label="Abrir menu">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <span class="logo">Inatel</span>
+        <button class="icone-btn" onclick="irPara('perfil')" aria-label="Perfil e conta">
+          <span class="material-symbols-outlined">person</span>
+        </button>
+      </header>
+
+      <!-- Menu lateral (usa openMenu/closeMenu do professor) -->
+      <div id="menu_aba">
+        <div class="menu-fundo" onclick="closeMenu()"></div>
+        <nav class="menu-painel" aria-label="Menu principal">
+          <div class="menu-titulo">
+            <b>Menu</b>
+            <button class="icone-btn" onclick="closeMenu()" aria-label="Fechar menu">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+          <button class="menu-item ativo" data-view="home" onclick="irPara('home')">
+            <span class="material-symbols-outlined">home</span> Início
+          </button>
+          <button class="menu-item" data-view="notas" onclick="irPara('notas')">
+            <span class="material-symbols-outlined">grading</span> Notas
+          </button>
+          <button class="menu-item" data-view="horarios" onclick="irPara('horarios')">
+            <span class="material-symbols-outlined">schedule</span> Horários
+          </button>
+          <button class="menu-item" data-view="aditamento" onclick="irPara('aditamento')">
+            <span class="material-symbols-outlined">event_repeat</span> Aditamento
+          </button>
+          <button class="menu-item" data-view="financeiro" onclick="irPara('financeiro')">
+            <span class="material-symbols-outlined">payments</span> Financeiro
+          </button>
+          <button class="menu-item" data-view="biblioteca" onclick="irPara('biblioteca')">
+            <span class="material-symbols-outlined">local_library</span> Biblioteca
+          </button>
+          <button class="menu-item separado" onclick="sair()">
+            <span class="material-symbols-outlined">switch_account</span> Trocar de conta
+          </button>
+        </nav>
+      </div>
+
+      <main>
+        <!-- INÍCIO -->
+        <section id="view-home" class="view ativa">
+          <div class="cartao boas-vindas">
+            <h1 id="saudacao">Olá!</h1>
+            <ul id="avisos"></ul>
+          </div>
+
+          <aulas-component id="componente"></aulas-component>
+
+          <div class="carousel-container">
+            <button id="prevBtn" class="seta esquerda" aria-label="Evento anterior">‹</button>
+            <div class="carousel"></div>
+            <button id="nextBtn" class="seta direita" aria-label="Próximo evento">›</button>
+          </div>
+        </section>
+
+        <!-- NOTAS -->
+        <section id="view-notas" class="view">
+          <h2>Notas</h2>
+          <div id="lista-notas"></div>
+        </section>
+
+        <!-- HORÁRIOS -->
+        <section id="view-horarios" class="view">
+          <h2>Horário da semana</h2>
+          <aulas-component dia="todas"></aulas-component>
+        </section>
+
+        <!-- FINANCEIRO e ADITAMENTO (mesmo componente, telas diferentes) -->
+        <section id="view-financeiro" class="view">
+          <financeiro-component id="financeiro"></financeiro-component>
+        </section>
+
+        <!-- PERFIL -->
+        <section id="view-perfil" class="view">
+          <h2>Perfil</h2>
+          <div class="cartao perfil">
+            <span class="material-symbols-outlined avatar">account_circle</span>
+            <h3 id="perfil-nome"></h3>
+            <p id="perfil-dados"></p>
+          </div>
+          <button class="btn-principal" onclick="sair()">Trocar de conta</button>
+        </section>
+
+        <!-- BIBLIOTECA -->
+        <section id="view-biblioteca" class="view">
+          <h2>Biblioteca</h2>
+          <div class="cartao"><p>Em breve.</p></div>
+        </section>
+      </main>
+    </div>
+
+    <!-- LOGIN / TROCA DE CONTA -->
+    <section id="login" class="login ativa">
+      <span class="logo">Inatel</span>
+      <h1>Entrar no App Inatel</h1>
+      <div class="login-form">
+        <label>Matrícula
+          <input id="login-matricula" inputmode="numeric" autocomplete="username">
+        </label>
+        <label>Senha
+          <input id="login-senha" type="password" autocomplete="current-password">
+        </label>
+        <p id="login-erro" class="login-erro" role="alert"></p>
+        <button type="button" class="btn-principal" onclick="fazerLogin()">Entrar</button>
+        <button type="button" class="btn-sec" onclick="entrarComBiometria()">Usar biometria</button>
+      </div>
+
+      <div class="contas-demo">
+        <p>Contas de demonstração (toque para preencher):</p>
+        <button type="button" class="btn-sec" onclick="preencherLogin('780')">Lara - matrícula 780</button>
+        <button type="button" class="btn-sec" onclick="preencherLogin('2024002')">Pedro - matrícula 2024002</button>
+        <p class="dica">Senha de todas: 1234</p>
+      </div>
+    </section>
 
     <script src="./script.js"></script>
   </body>

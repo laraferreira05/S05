@@ -4,26 +4,171 @@
   --prova: #126ae2;
   --cor-text: #333333;
 
-  /* Variáveis usadas pelo componente financeiro (os temas do script.js sobrescrevem) */
+  /* Variáveis dos temas (temaInatel/temaLim/temaDark em script.js sobrescrevem) */
   --cor-click: #126ae2;
   --cor-back1: #edf2f4;
 }
 
-html {
-  height: 100%;
-  background: 50% 50% no-repeat
-    url('data:image/svg+xml,<svg viewBox="-20 -5 60 40" width="140" xmlns="http://www.w3.org/2000/svg" opacity="0.2"><path d="M1 8l11-7 11 7v8l-11 7-11-7zm0 0l11 8 11-8m0 8L12 8 1 16M12 1v7m0 8v7" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2"/><text x="-12" y="32" font-size="5" font-family="monospace" fill="currentColor">Built on CodePen</text></svg>');
-}
+* { box-sizing: border-box; }
 
-/* Ajuste novo: fundo claro e espaço ao redor do app */
-body {
+/* Fora do "celular": fundo escuro, como no app do professor */
+html, body {
   margin: 0;
-  padding: 16px;
-  background-color: var(--cor-back1);
-  font-family: "Arimo", sans-serif;
-  color: var(--cor-text);
+  min-height: 100%;
+  background: #3b3b3b;
 }
 
+body {
+  font-family: "Arimo", sans-serif;
+  font-size: 13px;
+  color: #111;
+}
+
+/* ---------- Moldura do app (largura de celular, centralizada) ---------- */
+.app {
+  position: relative;
+  width: 100%;
+  max-width: 390px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: var(--cor-back1);
+}
+
+/* ---------- Barra superior ---------- */
+.topo {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: var(--cor-back1);
+}
+
+.logo {
+  font-size: 26px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--cor-click);
+}
+
+.icone-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--cor-click);
+  cursor: pointer;
+}
+
+.icone-btn .material-symbols-outlined { font-size: 28px; }
+
+.icone-btn:focus-visible,
+.menu-item:focus-visible,
+.seta:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+/* ---------- Menu lateral ---------- */
+#menu_aba {
+  display: none; /* openMenu() troca para block */
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100%;
+  max-width: 390px;
+  transform: translateX(-50%);
+  z-index: 30;
+}
+
+.menu-fundo {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.menu-painel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 75%;
+  padding: 8px 0;
+  background: white;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.2);
+  animation: entrar-menu 0.2s ease-out;
+}
+
+@keyframes entrar-menu {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.menu-titulo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px 8px 16px;
+  border-bottom: 1px solid #e3e8ee;
+  font-size: 16px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 15px;
+  color: #333;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu-item .material-symbols-outlined { color: var(--cor-click); }
+.menu-item:hover { background: #f1f4f7; }
+.menu-item.ativo { background: #e3edfb; font-weight: 700; }
+
+/* ---------- Telas ---------- */
+.view { display: none; padding: 0 14px 28px; }
+.view.ativa { display: block; }
+.view h2 { margin: 12px 0 4px; font-size: 18px; }
+
+.cartao {
+  background: white;
+  padding: 15px;
+  margin: 12px 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.boas-vindas h1 { margin: 0 0 10px; font-size: 20px; }
+
+#avisos { list-style: none; margin: 0; padding: 0; }
+
+#avisos li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 12px;
+}
+
+#avisos li.clicavel { cursor: pointer; }
+#avisos li.clicavel:hover { text-decoration: underline; }
+#avisos .material-symbols-outlined { font-size: 18px; color: var(--cor-click); }
+
+/* ---------- Notas (usa as etiquetas do professor) ---------- */
 .titulo_aula {
   font-weight: bold;
   font-size: 15px;
@@ -33,9 +178,7 @@ body {
   text-overflow: ellipsis;
 }
 
-.lables {
-  display: flex;
-}
+.lables { display: flex; margin-top: 10px; }
 
 .lable-prova,
 .lable-frequencia,
@@ -48,13 +191,8 @@ body {
   margin-right: 10px;
 }
 
-.lable-frequencia {
-  background-color: var(--frequencia);
-}
-
-.lable-nota {
-  background-color: var(--nota);
-}
+.lable-frequencia { background-color: var(--frequencia); }
+.lable-nota { background-color: var(--nota); }
 
 .p_lable {
   font-size: 13px;
@@ -62,4 +200,48 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.nota-vermelho { background-color: #d32f2f; }
+.nota-laranja { background-color: #fbc02d; color: #000; }
+.nota-verde { background-color: #388e3c; }
+
+/* ---------- Carrossel de eventos ---------- */
+.carousel-container {
+  position: relative;
+  overflow: hidden;
+  margin: 20px 0;
+  border-radius: 10px;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.carousel { display: flex; transition: transform 0.4s ease; }
+.carousel .card { min-width: 100%; }
+.carousel .card img { display: block; width: 100%; height: 140px; object-fit: cover; }
+.carousel .info { padding: 14px; text-align: center; }
+.carousel .info h3 { margin: 0 0 8px; font-size: 13px; }
+.carousel .info p { margin: 6px 0; font-size: 12px; }
+.carousel .icon { font-size: 15px; vertical-align: middle; color: var(--cor-click); }
+
+.seta {
+  position: absolute;
+  top: 55px;
+  width: 26px;
+  height: 36px;
+  border: 0;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.55);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.seta.esquerda { left: 8px; }
+.seta.direita { right: 8px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel { transition: none; }
+  .menu-painel { animation: none; }
 }
