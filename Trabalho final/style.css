@@ -1,0 +1,65 @@
+:root {
+  --frequencia: #126ae2;
+  --nota: #126ae2;
+  --prova: #126ae2;
+  --cor-text: #333333;
+
+  /* Variáveis usadas pelo componente financeiro (os temas do script.js sobrescrevem) */
+  --cor-click: #126ae2;
+  --cor-back1: #edf2f4;
+}
+
+html {
+  height: 100%;
+  background: 50% 50% no-repeat
+    url('data:image/svg+xml,<svg viewBox="-20 -5 60 40" width="140" xmlns="http://www.w3.org/2000/svg" opacity="0.2"><path d="M1 8l11-7 11 7v8l-11 7-11-7zm0 0l11 8 11-8m0 8L12 8 1 16M12 1v7m0 8v7" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2"/><text x="-12" y="32" font-size="5" font-family="monospace" fill="currentColor">Built on CodePen</text></svg>');
+}
+
+/* Ajuste novo: fundo claro e espaço ao redor do app */
+body {
+  margin: 0;
+  padding: 16px;
+  background-color: var(--cor-back1);
+  font-family: "Arimo", sans-serif;
+  color: var(--cor-text);
+}
+
+.titulo_aula {
+  font-weight: bold;
+  font-size: 15px;
+  padding: 0 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lables {
+  display: flex;
+}
+
+.lable-prova,
+.lable-frequencia,
+.lable-nota {
+  background-color: var(--prova);
+  padding: 7px 15px;
+  margin-bottom: 10px;
+  border-radius: 500px;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.lable-frequencia {
+  background-color: var(--frequencia);
+}
+
+.lable-nota {
+  background-color: var(--nota);
+}
+
+.p_lable {
+  font-size: 13px;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
