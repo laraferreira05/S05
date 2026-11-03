@@ -149,10 +149,10 @@ const contas = [
       { frequencia: '6 de 25', nota: '7' }
     ]),
     financiamento: {
-      contrato: { modalidade: 'FIES', valorFinanciado: 48000, coparticipacaoMensal: 350, totalParcelas: 48 },
+      contrato: { modalidade: 'FIES', valorFinanciado: 150000, coparticipacaoMensal: 510, totalParcelas: 60 },
       aditamento: { semestre: '2026/2', prazo: new Date(2026, 10, 10), status: 'Em dia' },
       pagamento: { chavePix: 'chave-pix-lara-exemplo', codigoBarras: '23793.38128 60000.000003 00000.000400 1 00000000000000' },
-      parcelas: gerarParcelas(48, 12, 1, 350, new Date(2025, 10, 1))
+      parcelas: gerarParcelas(60, 12, 1, 510, new Date(2025, 10, 1))
     }
   },
   {
@@ -170,10 +170,10 @@ const contas = [
       { frequencia: '9 de 25', nota: '4' }
     ]),
     financiamento: {
-      contrato: { modalidade: 'FIES', valorFinanciado: 36000, coparticipacaoMensal: 280, totalParcelas: 36 },
+      contrato: { modalidade: 'FIES', valorFinanciado: 36000, coparticipacaoMensal: 280, totalParcelas: 60 },
       aditamento: { semestre: '2026/2', prazo: new Date(2026, 11, 15), status: 'Em dia' },
       pagamento: { chavePix: 'chave-pix-pedro-exemplo', codigoBarras: '23793.38128 60000.000003 00000.000500 2 00000000000000' },
-      parcelas: gerarParcelas(36, 20, 0, 280, new Date(2025, 3, 1))
+      parcelas: gerarParcelas(60, 20, 0, 280, new Date(2025, 3, 1))
     }
   }
 ];
