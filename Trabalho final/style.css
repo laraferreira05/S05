@@ -245,3 +245,74 @@ body {
   .carousel { transition: none; }
   .menu-painel { animation: none; }
 }
+/* ---------- Tela de login ---------- */
+
+.login {
+  display: none;
+}
+
+.login.ativa {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 390px;
+  min-height: 100vh;
+  padding: 25px;
+  background: var(--cor-back1);
+  z-index: 100;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.login h1 {
+  font-size: 22px;
+  text-align: center;
+  margin: 25px 0;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 12px;
+}
+
+.login-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.contas-demo {
+  width: 100%;
+  margin-top: 25px;
+}
+
+.btn-principal,
+.btn-sec {
+  padding: 11px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-principal {
+  background: var(--cor-click);
+  color: white;
+}
+
+.btn-sec {
+  background: #dce5ef;
+  color: #333;
+}

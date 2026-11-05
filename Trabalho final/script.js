@@ -169,12 +169,7 @@ const contas = [
       { frequencia: '0 de 25', nota: '10' },
       { frequencia: '9 de 25', nota: '4' }
     ]),
-    financiamento: {
-      contrato: { modalidade: 'FIES', valorFinanciado: 36000, coparticipacaoMensal: 280, totalParcelas: 60 },
-      aditamento: { semestre: '2026/2', prazo: new Date(2026, 11, 15), status: 'Em dia' },
-      pagamento: { chavePix: 'chave-pix-pedro-exemplo', codigoBarras: '23793.38128 60000.000003 00000.000500 2 00000000000000' },
-      parcelas: gerarParcelas(60, 20, 0, 280, new Date(2025, 3, 1))
-    }
+    financiamento: null
   }
 ];
 
@@ -284,24 +279,35 @@ class FinanceiroComponent extends HTMLElement {
     this.parcelaSelecionada = null;
     this.mensagem = '';
 
-    // Dados vazios até alguém entrar; carregar() preenche com a conta (veja entrar())
-    this.contrato = { modalidade: 'FIES', valorFinanciado: 0, coparticipacaoMensal: 0, totalParcelas: 1 };
-    this.aditamento = { semestre: '', prazo: new Date(0), status: '' };
-    this.pagamento = { chavePix: '', codigoBarras: '' };
+    
+    this.possuiFinanciamento = false;
+    this.contrato = null;
+    this.aditamento = null;
+    this.pagamento = null;
     this.parcelas = [];
   }
 
-  // Carrega o financiamento de uma conta e volta para a tela inicial do financeiro
   carregar(dados) {
+  this.possuiFinanciamento = !!dados;
+
+  if (dados) {
     this.contrato = dados.contrato;
     this.aditamento = dados.aditamento;
     this.pagamento = dados.pagamento;
     this.parcelas = dados.parcelas;
-    this.tela = 'financeiro';
-    this.parcelaSelecionada = null;
-    this.mensagem = '';
-    this.render();
+  } else {
+    this.contrato = null;
+    this.aditamento = null;
+    this.pagamento = null;
+    this.parcelas = [];
   }
+
+  this.tela = 'financeiro';
+  this.parcelaSelecionada = null;
+  this.mensagem = '';
+
+  this.render();
+}
 
   connectedCallback() {
     // Um único listener (delegação): continua funcionando quando o innerHTML é refeito
@@ -415,15 +421,78 @@ class FinanceiroComponent extends HTMLElement {
 
   // ---------- Telas ----------
   telaFinanceiro() {
+
+  // ALUNO SEM FINANCIAMENTO
+  if (!this.possuiFinanciamento) {
     return `
       <h2>Financeiro</h2>
-      <div class="card"><b>Boletos</b></div>
+
       <div class="card">
-        <b>Financiamentos</b>
-        <p>Contratos</p>
-        <button data-acao="ir" data-valor="resumo">${this.contrato.modalidade} - Contrato ativo</button>
-      </div>`;
+        <span class="material-symbols-outlined">
+          account_balance
+        </span>
+
+        <h3>Você não possui financiamento ativo</h3>
+
+        <p>
+          Atualmente, não existe nenhum contrato de
+          financiamento vinculado à sua matrícula.
+        </p>
+
+        <button data-acao="ir" data-valor="informacoes">
+          Conheça o FIES
+        </button>
+      </div>
+
+      <div class="card">
+        <h3>Informações financeiras</h3>
+        <p>
+          Nesta área você poderá consultar informações
+          sobre financiamentos estudantis, pagamentos
+          e orientações financeiras.
+        </p>
+      </div>
+    `;
   }
+
+  // ALUNO COM FINANCIAMENTO
+  return `
+    <h2>Financeiro</h2>
+
+    <div class="card">
+      <b>Boletos</b>
+      <p>Consulte suas informações de pagamento.</p>
+    </div>
+
+    <div class="card">
+      <b>Financiamentos</b>
+
+      <p>Contrato ativo</p>
+
+      <button data-acao="ir" data-valor="resumo">
+        ${this.contrato.modalidade} - Consultar contrato
+      </button>
+    </div>
+
+    <div class="card">
+      <b>Aditamento</b>
+
+      <h3>${this.aditamento.status}</h3>
+
+      <p>
+        Semestre: ${this.aditamento.semestre}
+      </p>
+
+      <p>
+        Prazo: ${this.data(this.aditamento.prazo)}
+      </p>
+
+      <button data-acao="ir" data-valor="aditamento">
+        Consultar aditamento
+      </button>
+    </div>
+  `;
+}
 
   telaAditamento() {
     const dias = this.diasParaPrazo();
