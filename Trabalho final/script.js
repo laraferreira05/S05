@@ -339,11 +339,14 @@ class FinanceiroComponent extends HTMLElement {
   }
 
   // Aditamento.verificarPendencia(): simula o alerta push
-  verificarPendencia() {
-    const dias = this.diasParaPrazo();
-    return dias >= 0 && dias <= 7;
+ verificarPendencia() {
+  if (!this.possuiFinanciamento || !this.aditamento) {
+    return false;
   }
 
+  const dias = this.diasParaPrazo();
+  return dias >= 0 && dias <= 7;
+}
   moeda(v) {
     return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
@@ -514,6 +517,65 @@ class FinanceiroComponent extends HTMLElement {
       <button data-acao="ir" data-valor="resumo">Ver financiamento</button>`;
   }
 
+  telaInformacoes() {
+  return `
+    <button class="voltar" data-acao="ir" data-valor="financeiro">
+      ← Voltar
+    </button>
+
+    <h2>Conheça o FIES</h2>
+
+    <div class="card">
+      <h3>O que é o FIES?</h3>
+
+      <p>
+        O Fundo de Financiamento Estudantil (FIES)
+        é um programa do Governo Federal que oferece
+        financiamento para estudantes cursarem o
+        ensino superior em instituições privadas
+        participantes.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Como funciona?</h3>
+
+      <p>
+        O programa possibilita financiar parte dos
+        encargos educacionais, conforme as regras
+        e condições estabelecidas para cada modalidade.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Como buscar um financiamento?</h3>
+
+      <p>
+        1. Consulte os editais e requisitos do programa.
+      </p>
+
+      <p>
+        2. Verifique se sua instituição e curso
+        participam do FIES.
+      </p>
+
+      <p>
+        3. Acompanhe os períodos de inscrição
+        e os procedimentos oficiais.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Precisa de ajuda?</h3>
+
+      <p>
+        Procure o setor financeiro da instituição
+        para receber orientações sobre as opções
+        de financiamento estudantil.
+      </p>
+    </div>
+  `;
+ }
   telaResumo() {
     const c = this.contrato;
     return `
@@ -609,14 +671,15 @@ class FinanceiroComponent extends HTMLElement {
   }
 
   render() {
-    const telas = {
-      financeiro: () => this.telaFinanceiro(),
-      aditamento: () => this.telaAditamento(),
-      resumo: () => this.telaResumo(),
-      parcelas: () => this.telaParcelas(),
-      pagamento: () => this.telaPagamento(),
-      extrato: () => this.telaExtrato()
-    };
+   const telas = {
+  financeiro: () => this.telaFinanceiro(),
+  aditamento: () => this.telaAditamento(),
+  informacoes: () => this.telaInformacoes(),
+  resumo: () => this.telaResumo(),
+  parcelas: () => this.telaParcelas(),
+  pagamento: () => this.telaPagamento(),
+  extrato: () => this.telaExtrato()
+};
     this.shadowRoot.innerHTML = this.estilos() + `<div>${telas[this.tela]()}</div>`;
   }
 }
