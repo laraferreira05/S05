@@ -44,9 +44,6 @@
           <button class="menu-item" data-view="horarios" onclick="irPara('horarios')">
             <span class="material-symbols-outlined">schedule</span> Horários
           </button>
-          <button class="menu-item" data-view="aditamento" onclick="irPara('aditamento')">
-            <span class="material-symbols-outlined">event_repeat</span> Aditamento
-          </button>
           <button class="menu-item" data-view="financeiro" onclick="irPara('financeiro')">
             <span class="material-symbols-outlined">payments</span> Financeiro
           </button>
@@ -84,8 +81,8 @@
 
         <!-- HORÁRIOS -->
         <section id="view-horarios" class="view">
-          <h2>Horário da semana</h2>
-          <aulas-component dia="todas"></aulas-component>
+         <h2>Horários</h2>
+         <div id="quadro-horarios" class="quadro"></div>
         </section>
 
         <!-- FINANCEIRO e ADITAMENTO (mesmo componente, telas diferentes) -->
@@ -131,8 +128,8 @@
       <div class="contas-demo">
         <p>Contas de demonstração (toque para preencher):</p>
         <button type="button" class="btn-sec" onclick="preencherLogin('780')">Lara - matrícula 780</button>
-        <button type="button" class="btn-sec" onclick="preencherLogin('2024002')">Pedro - matrícula 2024002</button>
-        <p class="dica">Senha de todas: 1234</p>
+        <button type="button" class="btn-sec" onclick="preencherLogin('890')">Pedro - matrícula 890</button>
+      <!-- <p class="dica">Senha de todas: 1234</p>-->
       </div>
     </section>
 
