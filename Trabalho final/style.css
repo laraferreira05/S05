@@ -316,3 +316,50 @@ body {
   background: #dce5ef;
   color: #333;
 }
+/* ---------- Quadro de horários ---------- */
+.quadro {
+  display: grid;
+  grid-template-columns: 52px repeat(6, 1fr);
+  gap: 4px;
+  margin: 12px 0;
+}
+
+.quadro .cab {
+  padding: 6px 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cor-click);
+}
+
+.quadro .hora {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border-radius: 6px;
+  background: var(--cor-click);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.quadro .celula {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border-radius: 6px;
+  background: #dfe6ec;
+  font-size: 10px;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.quadro .celula.aula {
+  background: white;
+  color: #333;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}

@@ -101,7 +101,7 @@ if (carousel) {
 createCards();
 
 // =====================================================================
-// NOVO: Dados das contas (alunos) e das matérias do período
+// Dados das contas (alunos) e das matérias do período
 // Para trocar de conta: menu > "Trocar de conta" (ou ícone de perfil)
 // =====================================================================
 const gradeBase = [
@@ -156,7 +156,7 @@ const contas = [
     }
   },
   {
-    matricula: '2024002',
+    matricula: '890',
     senha: '1234',
     nome: 'Pedro',
     curso: 'Engenharia de Software',
@@ -264,7 +264,51 @@ customElements.define('aulas-component', AulasComponent);
 
 
 // =====================================================================
-// NOVO: Componente Financeiro (FIES) - App Inatel
+// Quadro de horários (baseado no app do Inatel)
+// Cada linha: hora + 6 células (seg, ter, qua, qui, sex, sáb)
+// Célula vazia = '' | com aula = ['turma', 'sala']
+// Os horários de 07:00 e 08:00 ficam vazios (aulas removidas)
+// =====================================================================
+const diasQuadro = ['S', 'T', 'Q', 'Q', 'S', 'S'];
+
+const quadroHorarios = [
+  { hora: '07:00', celulas: ['', '', '', '', '', ''] },
+  { hora: '08:00', celulas: ['', '', '', '', '', ''] },
+  { hora: '08:50', celulas: ['', '', '', '', '', ''] },
+  { hora: '10:00', celulas: ['', '', ['E08', 'L1'], '', '', ''] },
+  { hora: '10:50', celulas: ['', '', ['E08', 'L1'], '', '', ''] },
+  { hora: '13:30', celulas: ['', '', '', '', '', ''] },
+  { hora: '14:20', celulas: ['', '', '', '', '', ''] },
+  { hora: '15:30', celulas: ['', '', ['F03', 'A'], ['G04', 'A'], '', ''] },
+  { hora: '16:20', celulas: ['', '', ['F03', 'A'], ['G04', 'A'], '', ''] },
+  { hora: '17:30', celulas: [['E08', 'A'], ['M05', 'C'], ['S05', 'A'], ['M05', 'C'], '', ''] },
+  { hora: '18:20', celulas: [['E08', 'A'], ['M05', 'C'], ['S05', 'A'], ['M05', 'C'], '', ''] },
+  { hora: '19:30', celulas: [['S01', 'B'], '', '', '', '', ''] },
+  { hora: '20:20', celulas: [['S01', 'B'], '', '', '', '', ''] }
+];
+
+function renderQuadroHorarios() {
+  const destino = document.getElementById('quadro-horarios');
+  if (!destino) return;
+
+  const cabecalho = '<div class="cab">HORA</div>' +
+    diasQuadro.map(d => `<div class="cab">${d}</div>`).join('');
+
+  const linhas = quadroHorarios.map(l => {
+    const celulas = l.celulas.map(c =>
+      c
+        ? `<div class="celula aula"><span>${c[0]}</span><span>${c[1]}</span></div>`
+        : '<div class="celula"></div>'
+    ).join('');
+    return `<div class="hora">${l.hora}</div>${celulas}`;
+  }).join('');
+
+  destino.innerHTML = cabecalho + linhas;
+}
+
+
+// =====================================================================
+// Componente Financeiro (FIES) - App Inatel
 // Telas (wireframe / HTA):
 //   financeiro (1.2) -> resumo (2.1) -> parcelas (2.2)
 //   -> pagamento (3.A) / extrato (3.B)      + aditamento (menu)
@@ -279,7 +323,6 @@ class FinanceiroComponent extends HTMLElement {
     this.parcelaSelecionada = null;
     this.mensagem = '';
 
-    
     this.possuiFinanciamento = false;
     this.contrato = null;
     this.aditamento = null;
@@ -288,26 +331,26 @@ class FinanceiroComponent extends HTMLElement {
   }
 
   carregar(dados) {
-  this.possuiFinanciamento = !!dados;
+    this.possuiFinanciamento = !!dados;
 
-  if (dados) {
-    this.contrato = dados.contrato;
-    this.aditamento = dados.aditamento;
-    this.pagamento = dados.pagamento;
-    this.parcelas = dados.parcelas;
-  } else {
-    this.contrato = null;
-    this.aditamento = null;
-    this.pagamento = null;
-    this.parcelas = [];
+    if (dados) {
+      this.contrato = dados.contrato;
+      this.aditamento = dados.aditamento;
+      this.pagamento = dados.pagamento;
+      this.parcelas = dados.parcelas;
+    } else {
+      this.contrato = null;
+      this.aditamento = null;
+      this.pagamento = null;
+      this.parcelas = [];
+    }
+
+    this.tela = 'financeiro';
+    this.parcelaSelecionada = null;
+    this.mensagem = '';
+
+    this.render();
   }
-
-  this.tela = 'financeiro';
-  this.parcelaSelecionada = null;
-  this.mensagem = '';
-
-  this.render();
-}
 
   connectedCallback() {
     // Um único listener (delegação): continua funcionando quando o innerHTML é refeito
@@ -339,14 +382,15 @@ class FinanceiroComponent extends HTMLElement {
   }
 
   // Aditamento.verificarPendencia(): simula o alerta push
- verificarPendencia() {
-  if (!this.possuiFinanciamento || !this.aditamento) {
-    return false;
+  verificarPendencia() {
+    if (!this.possuiFinanciamento || !this.aditamento) {
+      return false;
+    }
+
+    const dias = this.diasParaPrazo();
+    return dias >= 0 && dias <= 7;
   }
 
-  const dias = this.diasParaPrazo();
-  return dias >= 0 && dias <= 7;
-}
   moeda(v) {
     return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
@@ -425,77 +469,77 @@ class FinanceiroComponent extends HTMLElement {
   // ---------- Telas ----------
   telaFinanceiro() {
 
-  // ALUNO SEM FINANCIAMENTO
-  if (!this.possuiFinanciamento) {
+    // ALUNO SEM FINANCIAMENTO
+    if (!this.possuiFinanciamento) {
+      return `
+        <h2>Financeiro</h2>
+
+        <div class="card">
+          <span class="material-symbols-outlined">
+            account_balance
+          </span>
+
+          <h3>Você não possui financiamento ativo</h3>
+
+          <p>
+            Atualmente, não existe nenhum contrato de
+            financiamento vinculado à sua matrícula.
+          </p>
+
+          <button data-acao="ir" data-valor="informacoes">
+            Conheça o FIES
+          </button>
+        </div>
+
+        <div class="card">
+          <h3>Informações financeiras</h3>
+          <p>
+            Nesta área você poderá consultar informações
+            sobre financiamentos estudantis, pagamentos
+            e orientações financeiras.
+          </p>
+        </div>
+      `;
+    }
+
+    // ALUNO COM FINANCIAMENTO
     return `
       <h2>Financeiro</h2>
 
       <div class="card">
-        <span class="material-symbols-outlined">
-          account_balance
-        </span>
+        <b>Boletos</b>
+        <p>Consulte suas informações de pagamento.</p>
+      </div>
 
-        <h3>Você não possui financiamento ativo</h3>
+      <div class="card">
+        <b>Financiamentos</b>
 
-        <p>
-          Atualmente, não existe nenhum contrato de
-          financiamento vinculado à sua matrícula.
-        </p>
+        <p>Contrato ativo</p>
 
-        <button data-acao="ir" data-valor="informacoes">
-          Conheça o FIES
+        <button data-acao="ir" data-valor="resumo">
+          ${this.contrato.modalidade} - Consultar contrato
         </button>
       </div>
 
       <div class="card">
-        <h3>Informações financeiras</h3>
+        <b>Aditamento</b>
+
+        <h3>${this.aditamento.status}</h3>
+
         <p>
-          Nesta área você poderá consultar informações
-          sobre financiamentos estudantis, pagamentos
-          e orientações financeiras.
+          Semestre: ${this.aditamento.semestre}
         </p>
+
+        <p>
+          Prazo: ${this.data(this.aditamento.prazo)}
+        </p>
+
+        <button data-acao="ir" data-valor="aditamento">
+          Consultar aditamento
+        </button>
       </div>
     `;
   }
-
-  // ALUNO COM FINANCIAMENTO
-  return `
-    <h2>Financeiro</h2>
-
-    <div class="card">
-      <b>Boletos</b>
-      <p>Consulte suas informações de pagamento.</p>
-    </div>
-
-    <div class="card">
-      <b>Financiamentos</b>
-
-      <p>Contrato ativo</p>
-
-      <button data-acao="ir" data-valor="resumo">
-        ${this.contrato.modalidade} - Consultar contrato
-      </button>
-    </div>
-
-    <div class="card">
-      <b>Aditamento</b>
-
-      <h3>${this.aditamento.status}</h3>
-
-      <p>
-        Semestre: ${this.aditamento.semestre}
-      </p>
-
-      <p>
-        Prazo: ${this.data(this.aditamento.prazo)}
-      </p>
-
-      <button data-acao="ir" data-valor="aditamento">
-        Consultar aditamento
-      </button>
-    </div>
-  `;
-}
 
   telaAditamento() {
     const dias = this.diasParaPrazo();
@@ -518,64 +562,65 @@ class FinanceiroComponent extends HTMLElement {
   }
 
   telaInformacoes() {
-  return `
-    <button class="voltar" data-acao="ir" data-valor="financeiro">
-      ← Voltar
-    </button>
+    return `
+      <button class="voltar" data-acao="ir" data-valor="financeiro">
+        ← Voltar
+      </button>
 
-    <h2>Conheça o FIES</h2>
+      <h2>Conheça o FIES</h2>
 
-    <div class="card">
-      <h3>O que é o FIES?</h3>
+      <div class="card">
+        <h3>O que é o FIES?</h3>
 
-      <p>
-        O Fundo de Financiamento Estudantil (FIES)
-        é um programa do Governo Federal que oferece
-        financiamento para estudantes cursarem o
-        ensino superior em instituições privadas
-        participantes.
-      </p>
-    </div>
+        <p>
+          O Fundo de Financiamento Estudantil (FIES)
+          é um programa do Governo Federal que oferece
+          financiamento para estudantes cursarem o
+          ensino superior em instituições privadas
+          participantes.
+        </p>
+      </div>
 
-    <div class="card">
-      <h3>Como funciona?</h3>
+      <div class="card">
+        <h3>Como funciona?</h3>
 
-      <p>
-        O programa possibilita financiar parte dos
-        encargos educacionais, conforme as regras
-        e condições estabelecidas para cada modalidade.
-      </p>
-    </div>
+        <p>
+          O programa possibilita financiar parte dos
+          encargos educacionais, conforme as regras
+          e condições estabelecidas para cada modalidade.
+        </p>
+      </div>
 
-    <div class="card">
-      <h3>Como buscar um financiamento?</h3>
+      <div class="card">
+        <h3>Como buscar um financiamento?</h3>
 
-      <p>
-        1. Consulte os editais e requisitos do programa.
-      </p>
+        <p>
+          1. Consulte os editais e requisitos do programa.
+        </p>
 
-      <p>
-        2. Verifique se sua instituição e curso
-        participam do FIES.
-      </p>
+        <p>
+          2. Verifique se sua instituição e curso
+          participam do FIES.
+        </p>
 
-      <p>
-        3. Acompanhe os períodos de inscrição
-        e os procedimentos oficiais.
-      </p>
-    </div>
+        <p>
+          3. Acompanhe os períodos de inscrição
+          e os procedimentos oficiais.
+        </p>
+      </div>
 
-    <div class="card">
-      <h3>Precisa de ajuda?</h3>
+      <div class="card">
+        <h3>Precisa de ajuda?</h3>
 
-      <p>
-        Procure o setor financeiro da instituição
-        para receber orientações sobre as opções
-        de financiamento estudantil.
-      </p>
-    </div>
-  `;
- }
+        <p>
+          Procure o setor financeiro da instituição
+          para receber orientações sobre as opções
+          de financiamento estudantil.
+        </p>
+      </div>
+    `;
+  }
+
   telaResumo() {
     const c = this.contrato;
     return `
@@ -671,15 +716,15 @@ class FinanceiroComponent extends HTMLElement {
   }
 
   render() {
-   const telas = {
-  financeiro: () => this.telaFinanceiro(),
-  aditamento: () => this.telaAditamento(),
-  informacoes: () => this.telaInformacoes(),
-  resumo: () => this.telaResumo(),
-  parcelas: () => this.telaParcelas(),
-  pagamento: () => this.telaPagamento(),
-  extrato: () => this.telaExtrato()
-};
+    const telas = {
+      financeiro: () => this.telaFinanceiro(),
+      aditamento: () => this.telaAditamento(),
+      informacoes: () => this.telaInformacoes(),
+      resumo: () => this.telaResumo(),
+      parcelas: () => this.telaParcelas(),
+      pagamento: () => this.telaPagamento(),
+      extrato: () => this.telaExtrato()
+    };
     this.shadowRoot.innerHTML = this.estilos() + `<div>${telas[this.tela]()}</div>`;
   }
 }
@@ -687,7 +732,7 @@ customElements.define('financeiro-component', FinanceiroComponent);
 
 
 // =====================================================================
-// NOVO: Navegação do app (menu do canto superior esquerdo)
+// Navegação do app (menu do canto superior esquerdo)
 // =====================================================================
 
 // Troca a tela exibida. view = home | notas | horarios | aditamento | financeiro | biblioteca
@@ -707,6 +752,7 @@ function irPara(view) {
   if (view === 'aditamento') fin?.abrir('aditamento');
   if (view === 'home') atualizarAvisos();
   if (view === 'notas') renderNotas();
+  if (view === 'horarios') renderQuadroHorarios();   // <-- linha que faltava
   if (view === 'perfil') renderPerfil();
 
   closeMenu();
